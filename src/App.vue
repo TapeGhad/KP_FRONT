@@ -16,10 +16,10 @@
   height: 100%;
   max-height: fit-content;
   z-index: 0;
-  background: #070708;
+  background: #555554;
   text-align: center;
   color: #2c3e50;
-  overflow-x:unset;
+  overflow: auto;
 }
 
 h1 {
