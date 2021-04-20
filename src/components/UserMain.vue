@@ -66,6 +66,15 @@
       </template>
     </VDataTable>
     <div class="chat">
+      <div class="chat-messages">
+        <div v-for="message in allMessages" :key="`${message.date}${message.message}`" class="chat-mes">
+          <p style="margin: auto 10px auto 0; border: 1px solid black; border-width: 0 1px 0 0; height: 100%">{{ formatDate(message.date) }}</p>
+          <div style="display: flex; flex-direction: column; align-items: flex-start">
+            <p>{{ message.name}}</p>
+            <p>{{ message.message }}</p>
+          </div>
+        </div>
+      </div>
       <input type="text" v-model="message" style="color: black; border: 1px solid black; height: 40px"/>
       <VBtn
         elevation="2"
@@ -83,6 +92,7 @@ import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'Login',
@@ -109,6 +119,7 @@ export default {
             mustSort: false
           },
           message: '',
+          allMessages: [],
           switch1: false,
           items: [
         {
@@ -137,14 +148,24 @@ export default {
     hideModal() {
       return;
     },
+    formatDate(date) {
+      return moment(date).format('h:mm:ss');
+    },
     sendMessage() {
-      this.$socket.emit('message', this.message)
+      if (this.message) this.$socket.emit('message', this.message, this.userInfo.email);
+      this.message = '';
     },
   },
   mounted() {
     this.sockets.subscribe(`chatUpdate`, (message) => {
-      console.log('SOCKET SERVE', message)
+      console.log('SOCKET SERVE', message);
+      this.allMessages.push(message);
     });
+    this.sockets.subscribe(`allChat`, (messages) => {
+      this.allMessages = messages;
+      console.log(messages);
+    });
+    this.$socket.emit('getChat');
   },
   computed: {
     ...mapGetters([
@@ -176,6 +197,25 @@ span {
   border-radius: 15px;
   padding: 10px 15px;
   margin: 10px auto;
+}
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 80%;
+  max-height: 80%;
+  overflow: auto;
+}
+.chat-mes {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  width: 90%;
+  height: 50px;
+  border: 1px solid black;
+  border-width: 1px 0;
 }
 .alert {
   margin: 0 auto;
