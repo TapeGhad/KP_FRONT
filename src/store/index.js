@@ -32,6 +32,8 @@ Vue.use(Vuex);
 const state = {
   userInfo: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null,
 
+  subjects: [],
+
   error: null,
   loader: false,
 
@@ -121,6 +123,17 @@ const actions = {
 
   hideError({ commit }, hideError) {
     commit('ERROR', hideError);
+  },
+
+  async allSubjects({ commit }, hideError) {
+    const {data} = await Axios.get(`/users/subjectsList`);
+    commit('SET_SUBJECTS', data);
+  },
+
+  async becomeRep({ commit }, dataCome) {
+    const {data} = await Axios.post(`/users/becomeRep`, dataCome);
+    console.log('data', data);
+    commit('SET_SUBJECTS', data);
   },
 
   async getCoinsBasic({ commit, state }) {
@@ -287,6 +300,9 @@ const mutations = {
   },
   ERROR(state, error) {
     state.error = error;
+  },
+  SET_SUBJECTS(state, sub) {
+    state.subjects = sub;
   },
   SET_COINS_FROM_CONST(state, coins) {
     state.coinsFromConst = coins;

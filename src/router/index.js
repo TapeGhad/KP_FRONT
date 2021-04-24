@@ -6,6 +6,7 @@ import PageNotFound from '../components/PageNotFound.vue'
 import UserMain from '../components/UserMain.vue'
 import RepMain from '../components/RepMain.vue'
 import AdminMain from '../components/AdminMain.vue'
+import BecomeRep from '../components/BecomeRep.vue'
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,11 @@ const routes = [
     path: '*',
     name: 'PageNotFound',
     component: PageNotFound
+  },
+  {
+    path: '/become-rep',
+    name: 'BecomeRep',
+    component: BecomeRep
   }
 ]
 

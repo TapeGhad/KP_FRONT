@@ -2,21 +2,9 @@
 <div class="user-page">
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
-  <!-- <VAlert
-  class="alert"
-    width="200"
-    dense
-    elevation="10"
-    type="success"
-  >Switch is {{ switch1 === true ? 'on' : 'off'}}
-  </VAlert>
-  <VSwitch
-    class="switch"
-    v-model="switch1"
-    inset
-    color="rgb(78 230 78)"
-    :label="`Switch 1`"
-    ></VSwitch> -->
+  <VBtn style="width: fit-content; padding: 10px 20px; margin-left: 20px;" @click="becomeRep">
+    Become a repetitor
+  </VBtn>
    <VCarousel :height="400" :show-arrows="false" cycle style="width: 1000px; margin: 0 auto">
       <VCarouselItem
         v-for="(item,i) in items"
@@ -91,7 +79,6 @@
 import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
-import { mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -155,6 +142,9 @@ export default {
       if (this.message) this.$socket.emit('message', this.message, this.userInfo.email);
       this.message = '';
     },
+    becomeRep() {
+       this.$router.push("/become-rep");
+    }
   },
   mounted() {
     this.sockets.subscribe(`chatUpdate`, (message) => {
