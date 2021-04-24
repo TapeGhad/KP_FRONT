@@ -2,10 +2,16 @@
 <div class="user-page">
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
-  <VBtn style="width: fit-content; padding: 10px 20px; margin-left: 20px;" @click="becomeRep">
-    Become a repetitor
-  </VBtn>
-   <VCarousel :height="400" :show-arrows="false" cycle style="width: 1000px; margin: 0 auto">
+  <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 20px 20px 0">
+    <VBtn style="width: fit-content; padding: 10px 20px; margin-left: 20px;" @click="becomeRep">
+      Become a repetitor
+    </VBtn>
+    <VChip
+      style="font-weight: bold; font-size: 20px; padding: 10px 15px"
+    >Online: {{usersOnline}}</VChip>
+  </div>
+  <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; height: fit-content">
+    <VCarousel :height="400" :show-arrows="false" cycle style="width: 1000px; margin: 0 auto">
       <VCarouselItem
         v-for="(item,i) in items"
         :key="i"
@@ -13,46 +19,6 @@
         :show-arrows="false"
       ></VCarouselItem>
     </VCarousel>
-  <div style="display: flex; flex-direction: row; justify-content: center; align-items: center; height: fit-content">
-    <VDataTable
-        :headers="headers"
-        :items="[{ name: 'Test', subject: 'Math', yearsOld: 28, expa: 5, price: 17},
-        { name: 'Test', subject: 'Math', yearsOld: 28, expa: 5, price: 17},
-        { name: 'Test', subject: 'Math', yearsOld: 28, expa: 5, price: 17},
-        { name: 'Test', subject: 'Math', yearsOld: 28, expa: 5, price: 17},
-        { name: 'Test', subject: 'Math', yearsOld: 28, expa: 5, price: 17},]"
-        :options.sync="tableSearchParams"
-        class="elevation-1 table"
-        :loading="true"
-        :server-items-length="5"
-        :footer-props="{
-          showFirstLastPage: true,
-          itemsPerPageOptions: [5],
-        }"
-        single-select
-      >
-      <template #item="{ item }">
-          <tr
-            @click="handleRowClickPackage(item)"
-          >
-            <td>{{ item.name }}</td>
-            <td>
-              <VChip >
-                  {{ item.subject }}
-              </VChip>
-            </td>
-            <td>{{ item.yearsOld }}</td>
-            <td>{{ item.expa }}</td>
-            <td>
-              <VChip>
-                <span class="text-center">
-                  {{ item.price }}$
-                </span>
-              </VChip>
-            </td>
-          </tr>
-      </template>
-    </VDataTable>
     <div class="chat">
       <div class="chat-messages">
         <div v-for="message in allMessages" :key="`${message.date}${message.message}`" class="chat-mes">
@@ -72,6 +38,117 @@
       >Send</VBtn>
     </div>
   </div>
+  <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: fit-content; margin-top: 50px">
+    <VDataTable
+          :headers="headers"
+          :items="[{ name: 'Test', subject: 'Math', expa: 1, rating: 3, price: 17},
+          { name: 'Test', subject: 'Math', expa: 4, rating: 4, price: 17},
+          { name: 'Test', subject: 'Math', expa: 6, rating: 5, price: 17},
+          { name: 'Test', subject: 'Math', expa: 2, rating: 2, price: 17},
+          { name: 'Test', subject: 'Math', expa: 3, rating: 3, price: 17},]"
+          :options.sync="tableSearchParams"
+          class="elevation-1 table"
+          :loading="true"
+          :server-items-length="5"
+          :footer-props="{
+            showFirstLastPage: true,
+            itemsPerPageOptions: [5],
+          }"
+          single-select
+        >
+        <template #item="{ item }">
+            <tr
+              @click="handleRowClickPackage(item)"
+            >
+              <td>{{ item.name }}</td>
+              <td>
+                <VChip >
+                    {{ item.subject }}
+                </VChip>
+              </td>
+              <td>{{ item.expa }}</td>
+              <td>
+                <VRating
+                  :value="item.rating"
+                  color="rgb(255, 234, 44)"
+                  background-color="rgb(78, 92, 78)"
+                  empty-icon="mdi-star-outline"
+                  full-icon="mdi-star"
+                  half-icon="mdi-star-half-full"
+                  half-increments
+                  large
+                ></VRating>
+              </td>
+              <td>
+                <VChip>
+                  <span class="text-center">
+                    {{ item.price }}$
+                  </span>
+                </VChip>
+              </td>
+            </tr>
+        </template>
+      </VDataTable>
+      <VCard 
+        width="350"
+        height="400"
+        elevation="10"
+        hover
+        style="margin: 0 auto 0 20px"
+      >
+        <div class="info_logo">P</div>
+        <VCardTitle>Repetitor: Petr Petrov</VCardTitle>
+        <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Subject: 
+          <VChip style="margin: 0 0 0 10px">Math</VChip>
+        </VCardSubtitle>
+        <VTabs style="width: 100%; margin-top: 10px" fixed-tabs color="rgb(16, 165, 16)" v-model="tab">
+          <VTab>Details</VTab>
+          <VTab>About</VTab>
+        </VTabs>
+        <VTabsItems v-model="tab" style="max-height: 200px; overflow: auto">
+          <VTabItem>
+            <VCard
+              flat
+            >
+            <VCardSubtitle class="card_details">Experience: 5 months</VCardSubtitle>
+            <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Rating: 
+              <VRating
+                  value="3.5"
+                  color="rgb(255, 234, 44)"
+                  background-color="rgb(78, 92, 78)"
+                  empty-icon="mdi-star-outline"
+                  full-icon="mdi-star"
+                  half-icon="mdi-star-half-full"
+                  half-increments
+                  size="25"
+                  readonly
+                  style="margin-left: 10px"
+                ></VRating>
+            </VCardSubtitle>
+            <VCardSubtitle class="card_details">Price: 
+              <VChip outlined style="margin-left: 25px">17$</VChip>
+            </VCardSubtitle>
+            <VCardSubtitle class="card_details">Private chat: 
+               <VCheckbox
+                disabled
+                color="rgb(10, 195, 10)"
+                hide-details
+                style="margin: 0 0 0 10px; padding: 0"
+                ></VCheckbox>
+            </VCardSubtitle>
+            </VCard>
+          </VTabItem>
+          <VTabItem>
+            <VCard
+              flat
+            >
+            <VCardText>Some text abut and ososdoasdoasdo</VCardText>
+            </VCard>
+          </VTabItem>
+        </VTabsItems>
+        <VBtn v-show="tab === 0" outlined fixed color="rgb(16, 165, 16)">START A CHAT</VBtn>
+      </VCard>
+  </div>
 </div>
 </template>
 
@@ -88,8 +165,8 @@ export default {
           headers: [
             { text: 'Repetitor', align: 'left', value: 'displayName' },
             { text: 'Subject', value: 'subject' },
-            { text: 'Years old', value: 'yearsOld' },
-            { text: 'Experience', value: 'expa' },
+            { text: 'Expa', value: 'expa' },
+            { text: 'Rating', value: 'rating' },
             { text: 'Price hour', value: 'price' }
           ],
           email: "",
@@ -106,6 +183,8 @@ export default {
             mustSort: false
           },
           message: '',
+          tab: null,
+          usersOnline: 0,
           allMessages: [],
           switch1: false,
           items: [
@@ -148,14 +227,16 @@ export default {
   },
   mounted() {
     this.sockets.subscribe(`chatUpdate`, (message) => {
-      console.log('SOCKET SERVE', message);
       this.allMessages.push(message);
     });
     this.sockets.subscribe(`allChat`, (messages) => {
       this.allMessages = messages;
-      console.log(messages);
+    });
+    this.sockets.subscribe(`usersOnline`, (users) => {
+      this.usersOnline = users;
     });
     this.$socket.emit('getChat');
+    this.$socket.emit('usersOnlineCheck');
   },
   computed: {
     ...mapGetters([
@@ -179,6 +260,14 @@ export default {
 <style>
 span {
   border: none;
+}
+
+.card_details {
+  display: flex;
+  font-weight: bold !important;
+  flex-direction: row;
+  align-items: center; 
+  padding: 10px 0 10px 15px;
 }
 .chat {
   width: 500px;
@@ -214,6 +303,22 @@ span {
   background-color: rgb(16, 165, 16) !important;
 }
 
+.info_logo {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 10px;
+  right: 10px;
+  width: 80px;
+  height: 80px;
+  color: #ffffff;
+  font-size: 35px;
+  border: 1px solid rgb(95, 95, 95);
+  border-radius: 100% !important;
+  background-color: grey;
+}
+
 .switch {
   margin: 0 auto;
 }
@@ -227,7 +332,7 @@ span {
 }
 
 .table {
-  margin: 50px auto;
+  margin: 0 20px 0 auto;
   width: 800px;
   padding: 20px;
 }

@@ -290,6 +290,7 @@ const actions = {
 
   logOutFromCurrency({ commit }) {
     localStorage.removeItem("user");
+    Axios.defaults.headers.common['Authorization'] = `Token `;
     commit("SET_USER_INFO", null);
   }
 }

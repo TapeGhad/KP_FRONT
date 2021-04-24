@@ -1,5 +1,8 @@
 <template>
   <div id="app">
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
     <router-view/>
   </div>
 </template>
@@ -19,7 +22,8 @@
   background: #555554;
   text-align: center;
   color: #2c3e50;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -27,5 +31,35 @@ h1 {
   font-size: 55px;
   color: white;
   letter-spacing: 0.1em;
+}
+
+.bg {
+  animation:slide 3s ease-in-out infinite alternate;
+  background-image: linear-gradient(-60deg, #6c3 50%, rgb(0, 60, 255) 50%);
+  bottom:0;
+  left:-50%;
+  opacity:.5;
+  position:fixed;
+  right:-50%;
+  top:0;
+  z-index:-1;
+}
+
+.bg2 {
+  animation-direction:alternate-reverse;
+  animation-duration:4s;
+}
+
+.bg3 {
+  animation-duration:5s;
+}
+
+@keyframes slide {
+  0% {
+    transform:translateX(-25%);
+  }
+  100% {
+    transform:translateX(25%);
+  }
 }
 </style>

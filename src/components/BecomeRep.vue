@@ -2,7 +2,8 @@
 <div class="user-page" data-app>
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
-  <VCard class="card" elevation="20">
+  <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
+  <VCard class="card" elevation="20" hover>
       <p style="font-size: 20px; margin: 30px 0; font-weight: bold">To become a repetitor fill this fields:</p>
       <VSelect 
         v-model="selectedSubject"
@@ -96,10 +97,14 @@ export default {
   methods: {
     ...mapActions({
       allSubjects: 'allSubjects',
-      becomeRep: 'becomeRep'
+      becomeRep: 'becomeRep',
+      logOutFromCurrency: 'logOutFromCurrency',
     }),
     hideModal() {
       return;
+    },
+    toUsersMain() {
+      this.$router.push("/user-main");
     },
     async sendSave() {
         await this.becomeRep({
@@ -111,6 +116,8 @@ export default {
             about: this.about,
             price: parseFloat(this.price),
         });
+        await this.logOutFromCurrency();
+        this.$router.push("/login");
     }
   },
   async mounted() {
@@ -125,15 +132,17 @@ export default {
         'subjects',
     ]),
     color: function() {
+        if (parseInt(this.price, 10) < 5 || !Boolean(this.price)) return 'error--text';
         const sub = this.subjects.find(sub => sub.name === this.selectedSubject);
         if (sub) {
             if (parseInt(this.price, 10) >= sub.averagePrice - 1 && parseInt(this.price, 10) <= sub.averagePrice + 1) return 'midPrice';
             if (parseInt(this.price, 10) > sub.averagePrice + 1) return 'highPrice';
             return 'lowPrice';
         }
-        return 'error-text'
+        return 'error--text'
     },
     hint: function() {
+        if (parseInt(this.price, 10) < 5 || !Boolean(this.price)) return 'Too low rate';
         const sub = this.subjects.find(sub => sub.name === this.selectedSubject);
         if (sub) {
             if (parseInt(this.price, 10) >= sub.averagePrice - 1 && parseInt(this.price, 10) <= sub.averagePrice + 1) return 'You have a middle rate';
@@ -143,7 +152,7 @@ export default {
         return 'Your hour rate'
     },
     saveDisable: function() {
-        if (this.selectedSubject && this.expa && this.about && this.price) return false;
+        if (this.selectedSubject && this.expa && this.about && this.price && parseInt(this.price, 10) >= 5) return false;
         return true;
     }
   },
