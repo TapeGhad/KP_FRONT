@@ -1,3 +1,3 @@
 export const environment = {
-    backendBaseUrl: 'http://localhost:4000'
+    backendBaseUrl: 'https://kpback.herokuapp.com'
  };
