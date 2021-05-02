@@ -1,5 +1,5 @@
 <template>
-<div class="user-page">
+<div class="user-page" data-app>
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
   <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 20px 20px 0">
@@ -41,26 +41,21 @@
   <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: fit-content; margin-top: 50px">
     <VDataTable
           :headers="headers"
-          :items="[{ name: 'Test', subject: 'Math', expa: 1, rating: 3, price: 17},
-          { name: 'Test', subject: 'Math', expa: 4, rating: 4, price: 17},
-          { name: 'Test', subject: 'Math', expa: 6, rating: 5, price: 17},
-          { name: 'Test', subject: 'Math', expa: 2, rating: 2, price: 17},
-          { name: 'Test', subject: 'Math', expa: 3, rating: 3, price: 17},]"
-          :options.sync="tableSearchParams"
+          :items="itemsTable"
           class="elevation-1 table"
-          :loading="true"
-          :server-items-length="5"
+          :items-per-page="5"
+          :options.sync="optionsTable"
           :footer-props="{
-            showFirstLastPage: true,
-            itemsPerPageOptions: [5],
+            itemsPerPageOptions: [5, 10],
           }"
+
           single-select
         >
         <template #item="{ item }">
             <tr
-              @click="handleRowClickPackage(item)"
+              @click="handleRowClickRep(item)"
             >
-              <td>{{ item.name }}</td>
+              <td>{{ item.email }}</td>
               <td>
                 <VChip >
                     {{ item.subject }}
@@ -69,13 +64,14 @@
               <td>{{ item.expa }}</td>
               <td>
                 <VRating
-                  :value="item.rating"
+                  :value="parseFloat(item.rating, 10)"
                   color="rgb(255, 234, 44)"
                   background-color="rgb(78, 92, 78)"
                   empty-icon="mdi-star-outline"
                   full-icon="mdi-star"
                   half-icon="mdi-star-half-full"
                   half-increments
+                  readonly
                   large
                 ></VRating>
               </td>
@@ -90,16 +86,17 @@
         </template>
       </VDataTable>
       <VCard 
-        width="350"
+        v-if="selectedRep"
+        width="400"
         height="400"
         elevation="10"
         hover
         style="margin: 0 auto 0 20px"
       >
         <div class="info_logo">P</div>
-        <VCardTitle>Repetitor: Petr Petrov</VCardTitle>
+        <VCardTitle>Repetitor: {{ selectedRep.email }}</VCardTitle>
         <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Subject: 
-          <VChip style="margin: 0 0 0 10px">Math</VChip>
+          <VChip style="margin: 0 0 0 10px">{{ selectedRep.subject }}</VChip>
         </VCardSubtitle>
         <VTabs style="width: 100%; margin-top: 10px" fixed-tabs color="rgb(16, 165, 16)" v-model="tab">
           <VTab>Details</VTab>
@@ -110,10 +107,10 @@
             <VCard
               flat
             >
-            <VCardSubtitle class="card_details">Experience: 5 months</VCardSubtitle>
+            <VCardSubtitle class="card_details">Experience: {{ selectedRep.expa }} months</VCardSubtitle>
             <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Rating: 
               <VRating
-                  value="3.5"
+                  :value="parseFloat(selectedRep.rating)"
                   color="rgb(255, 234, 44)"
                   background-color="rgb(78, 92, 78)"
                   empty-icon="mdi-star-outline"
@@ -126,11 +123,11 @@
                 ></VRating>
             </VCardSubtitle>
             <VCardSubtitle class="card_details">Price: 
-              <VChip outlined style="margin-left: 25px">17$</VChip>
+              <VChip outlined style="margin-left: 25px">{{ selectedRep.price }}$</VChip>
             </VCardSubtitle>
             <VCardSubtitle class="card_details">Private chat: 
                <VCheckbox
-                disabled
+                :disabled="!selectedRep.personaMsg"
                 color="rgb(10, 195, 10)"
                 hide-details
                 style="margin: 0 0 0 10px; padding: 0"
@@ -142,11 +139,17 @@
             <VCard
               flat
             >
-            <VCardText>Some text abut and ososdoasdoasdo</VCardText>
+            <VCardText>{{ selectedRep.about }}</VCardText>
             </VCard>
           </VTabItem>
         </VTabsItems>
-        <VBtn v-show="tab === 0" outlined fixed color="rgb(16, 165, 16)">START A CHAT</VBtn>
+        <VBtn v-show="tab === 0 && !inFavourites" fixed color="#FFC846" @click="addToFaivouritesCall">ADD TO FAVOIRITE</VBtn>
+        <VBtn v-show="tab === 0 && inFavourites" outlined fixed color="rgb(16, 165, 16)" @click="removeFromFaivouritesCall">
+        <VIcon left>
+          mdi-check
+          </VIcon>
+          IN FAVOURITES
+        </VBtn>
       </VCard>
   </div>
 </div>
@@ -155,7 +158,7 @@
 <script>
 import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -174,7 +177,7 @@ export default {
           loader: false,
           tableSearchParams: {
             page: 1,
-            itemsPerPage: 10,
+            itemsPerPage: 5,
             sortBy: [],
             sortDesc: [],
             groupBy: [],
@@ -182,11 +185,23 @@ export default {
             multiSort: false,
             mustSort: false
           },
+          optionsTable: {
+            page: 1,
+            itemsPerPage: 5,
+            sortBy: [],
+            sortDesc: [],
+            groupBy: [],
+            groupDesc: [],
+            multiSort: false,
+            mustSort: false
+          },
+          itemsTable: [],
           message: '',
           tab: null,
           usersOnline: 0,
           allMessages: [],
           switch1: false,
+          selectedRep: null,
           items: [
         {
           src: 'https://i.ytimg.com/vi/Kp2bYWRQylk/maxresdefault.jpg'
@@ -211,8 +226,22 @@ export default {
     Loader,
   },
   methods: {
+    ...mapActions({
+      fetchTableRep: "fetchTableRep",
+      addToFaivourites: 'addToFaivourites',
+      removeFromFaivourites: 'removeFromFaivourites',
+    }),
+    handleRowClickRep(item) {
+      this.selectedRep = item;
+    },
     hideModal() {
       return;
+    },
+    addToFaivouritesCall() {
+      this.addToFaivourites(this.selectedRep.id);
+    },
+    removeFromFaivouritesCall() {
+      this.removeFromFaivourites(this.selectedRep.id);
     },
     formatDate(date) {
       return moment(date).format('h:mm:ss');
@@ -242,15 +271,21 @@ export default {
     ...mapGetters([
       'userInfo',
       'error'
-    ])
+    ]),
+    inFavourites: function () {
+      return this.userInfo.faivourites.includes(this.selectedRep.id);
+    }
   },
   watch: {
     "userInfo": {
       handler: function(val, oldVal) {}
     },
-    tableSearchParams: {
-      handler: function(val, oldVal) {
-        console.log(val);
+    optionsTable: {
+      handler: async function(val, oldVal) {
+        const data = await this.fetchTableRep({params: val, user: 'rep'});
+        this.itemsTable = data;
+        if (data.length > 0) this.selectedRep = data[0];
+        else this.selectedRep = null;
       }
     }
   }

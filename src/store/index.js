@@ -130,6 +130,29 @@ const actions = {
     commit('SET_SUBJECTS', data);
   },
 
+  async fetchTableRep(_, params) {
+    const {data} = await Axios.post(`/users/params`, params);
+    return data;
+  },
+
+  async addToFaivourites({ commit }, id) {
+    await Axios.post("/users/addFav", { id })
+      .then(response => {
+        commit('SET_USER_INFO', {token: response.data.token, ...response.data.user});
+        localStorage.setItem("user", JSON.stringify({token: response.data.token, ...response.data.user}));
+        Axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+      })
+  },
+
+  async removeFromFaivourites({ commit }, id) {
+    await Axios.post("/users/removeFav", { id })
+      .then(response => {
+        commit('SET_USER_INFO', {token: response.data.token, ...response.data.user});
+        localStorage.setItem("user", JSON.stringify({token: response.data.token, ...response.data.user}));
+        Axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+      })
+  },
+
   async becomeRep({ commit }, dataCome) {
     const {data} = await Axios.post(`/users/becomeRep`, dataCome);
     console.log('data', data);
