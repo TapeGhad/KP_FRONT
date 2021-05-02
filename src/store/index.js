@@ -135,6 +135,16 @@ const actions = {
     return data;
   },
 
+  async saveNewMaterialRep(_, material) {
+    const {data} = await Axios.post(`/users/newMaterial`, { material });
+    return data;
+  },
+
+  async getRepInfo(_, idRep) {
+    const {data} = await Axios.post(`/users/repInfo`, { id: idRep });
+    return data;
+  },
+
   async addToFaivourites({ commit }, id) {
     await Axios.post("/users/addFav", { id })
       .then(response => {

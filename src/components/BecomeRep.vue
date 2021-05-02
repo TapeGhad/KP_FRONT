@@ -37,12 +37,23 @@
         style="margin: 0 0 10px 0"
     ></VTextField>
     <VTextField
+        v-model="phone"
+        label="Phone number *"
+        :rules="[v => v.length === 9 || 'Incorrect phone number']"
+        type="number"
+        counter="9"
+        hint="Phone will be visible only to students you approved"
+        style="margin: 0 0 10px 0"
+        prefix="+375"
+    >
+    </VTextField>
+    <VTextField
         :disabled="!selectedSubject"
         v-model="price"
         label="Price *"
         :hint="hint"
         persistent-hint
-        style="margin: 30px auto 0 auto; width: 150px"
+        style="margin: 10px auto 0 auto; width: 150px"
         :class="color"
         prefix="$"
     ></VTextField>
@@ -88,6 +99,7 @@ export default {
           personalMsg: true,
           about: '',
           price: 0,
+          phone: '',
       }
   },
   components: {
@@ -115,6 +127,7 @@ export default {
             personalMsg: this.personalMsg,
             about: this.about,
             price: parseFloat(this.price),
+            phone: phone,
         });
         await this.logOutFromCurrency();
         this.$router.push("/login");
@@ -152,7 +165,7 @@ export default {
         return 'Your hour rate'
     },
     saveDisable: function() {
-        if (this.selectedSubject && this.expa && this.about && this.price && parseInt(this.price, 10) >= 5) return false;
+        if (this.selectedSubject && this.expa && this.about.length <= 25 && this.price && parseInt(this.price, 10) >= 5 && this.phone.length === 9) return false;
         return true;
     }
   },
@@ -172,7 +185,7 @@ export default {
 <style>
 .card {
    width: 500px;
-   height: 700px;
+   height: 750px;
    padding: 10px 20px;
    margin: auto;
    transition: all ease 0.5s;

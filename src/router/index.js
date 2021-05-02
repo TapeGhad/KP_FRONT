@@ -7,6 +7,7 @@ import UserMain from '../components/UserMain.vue'
 import RepMain from '../components/RepMain.vue'
 import AdminMain from '../components/AdminMain.vue'
 import BecomeRep from '../components/BecomeRep.vue'
+import RepetitorInfo from '../components/RepetitorInfo.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
     path: '/become-rep',
     name: 'BecomeRep',
     component: BecomeRep
+  },
+  { 
+    path: '/repetitor/:id',
+    component: RepetitorInfo,
+    props: route => ({ idRep: route.params.id }), 
   }
 ]
 

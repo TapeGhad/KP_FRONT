@@ -143,6 +143,7 @@
             </VCard>
           </VTabItem>
         </VTabsItems>
+        <VBtn v-show="tab === 0" color="rgb(16, 165, 16)" @click="goToRep" style="position: absolute; left: 10px; bottom: 5;">MORE</VBtn>
         <VBtn v-show="tab === 0 && !inFavourites" fixed color="#FFC846" @click="addToFaivouritesCall">ADD TO FAVOIRITE</VBtn>
         <VBtn v-show="tab === 0 && inFavourites" outlined fixed color="rgb(16, 165, 16)" @click="removeFromFaivouritesCall">
         <VIcon left>
@@ -229,13 +230,17 @@ export default {
     ...mapActions({
       fetchTableRep: "fetchTableRep",
       addToFaivourites: 'addToFaivourites',
+      hideError: 'hideError',
       removeFromFaivourites: 'removeFromFaivourites',
     }),
     handleRowClickRep(item) {
       this.selectedRep = item;
     },
     hideModal() {
-      return;
+      this.hideError(null);
+    },
+    goToRep() {
+      this.$router.push(`/repetitor/${this.selectedRep.id}`);
     },
     addToFaivouritesCall() {
       this.addToFaivourites(this.selectedRep.id);
