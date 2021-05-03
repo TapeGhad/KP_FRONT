@@ -140,6 +140,11 @@ const actions = {
     return data;
   },
 
+  async deleteMaterial(_, title) {
+    const {data} = await Axios.post(`/users/deleteMaterial`, { title });
+    return data;
+  },
+
   async getRepInfo(_, idRep) {
     const {data} = await Axios.post(`/users/repInfo`, { id: idRep });
     return data;

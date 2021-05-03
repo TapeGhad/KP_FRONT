@@ -56,6 +56,7 @@
             <VExpansionPanel v-for="(material, index) in selectedRep.materials" :key="index">
                 <VExpansionPanelHeader>
                 {{ material.title }}
+                <VIcon style="position: absolute; top:10px; right:20px;" @click.stop="deleteMaterialCall(material.title)">mdi-delete</VIcon>
                 </VExpansionPanelHeader>
                 <VExpansionPanelContent style="background-color: grey">
                     <VCard 
@@ -67,7 +68,6 @@
             </VExpansionPanel>
             <VCardText v-if="selectedRep.materials.length === 0"> No materials yet</VCardText>
         </VExpansionPanels>
-        <VBtn text style="position: absolute; bottom:10px; right:10px; color: rgb(16, 165, 16)">Save</VBtn>
     </VCard>
      <div class="chat" style="margin: 0">
       <div class="chat-messages">
@@ -130,7 +130,8 @@ export default {
     ...mapActions({
         hideError: 'hideError',
         getRepInfo: 'getRepInfo',
-        saveNewMaterialRep: 'saveNewMaterialRep'
+        saveNewMaterialRep: 'saveNewMaterialRep',
+        deleteMaterial: 'deleteMaterial',
     }),
     toUsersMain() {
       this.$router.push("/user-main");
@@ -143,6 +144,10 @@ export default {
     },
     addMaterial() {
       this.isOpenAddMaterial = true;
+    },
+    async deleteMaterialCall(title) {
+      await this.deleteMaterial(title);
+      this.selectedRep = await this.getRepInfo(this.userInfo.id);
     },
     goToAddParts() {
       this.isOpenAddMaterial = false;
