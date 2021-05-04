@@ -123,6 +123,7 @@ import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'Login',
@@ -160,7 +161,12 @@ export default {
       this.hideError(null);
     },
     sendMessage() {
-        consile.log(this.message);
+      this.$socket.emit('personalMsg', { to: this.selectedRep.email, from: this.userInfo.email, text: this.message});
+      this.allMessages.push({ name: this.userInfo.email, message: this.message, date: Date.now()})
+      this.message = '';
+    },
+    formatDate(date) {
+      return moment(date).format('h:mm:ss');
     },
   },
   computed: {
@@ -176,6 +182,11 @@ export default {
   },
   async mounted() {
     this.selectedRep = await this.getRepInfo(this.idRep);
+    this.sockets.subscribe('personalMsg', (message) => {
+      if (message.to === this.userInfo.email) {
+        this.allMessages.push({ name: message.from, message: message.text, date: Date.now()});
+      }
+    });
   }
 }
 </script>

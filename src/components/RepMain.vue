@@ -94,13 +94,23 @@
     </VCard>
      <div class="chat" style="margin: 0">
       <div class="chat-messages">
-        <div v-for="message in allMessages" :key="`${message.date}${message.message}`" class="chat-mes">
-          <p style="margin: auto 10px auto 0; border: 1px solid black; border-width: 0 1px 0 0; height: 100%">{{ formatDate(message.date) }}</p>
-          <div style="display: flex; flex-direction: column; align-items: flex-start">
-            <p>{{ message.name}}</p>
-            <p>{{ message.message }}</p>
-          </div>
-        </div>
+        {{ chatTab }}
+        <VTabs v-model="chatTab">
+          <VTab v-for="(user, index) in selectedRep.currentStud" :key="index">{{ user.email }}</VTab>
+        </VTabs>
+        <VTabsItems v-model="chatTab">
+          <VTabItem v-for="(user, index) in selectedRep.currentStud" :key="index">
+            <VCard style="height: 250px; overflow: auto">
+              <div v-for="message in allMessages[user.email]" :key="`${message.date}${message.message}`" class="chat-mes">
+                <p style="margin: auto 10px auto 0; border: 1px solid black; border-width: 0 1px 0 0; height: 100%">{{ formatDate(message.date) }}</p>
+                <div style="display: flex; flex-direction: column; align-items: flex-start">
+                  <p>{{ message.name}}</p>
+                  <p>{{ message.message }}</p>
+                </div>
+              </div>
+            </VCard>
+          </VTabItem>
+        </VTabsItems>
       </div>
       <input type="text" v-model="message" style="color: black; border: 1px solid black; height: 40px"/>
       <VBtn
@@ -119,6 +129,7 @@ import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
 import { mapActions, mapState } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'Login',
@@ -137,6 +148,7 @@ export default {
           titleNewMaterial: '',
           amountNewMaterial: '',
           newParts: [],
+          chatTab: null,
       }
   },
   props: {
@@ -166,8 +178,14 @@ export default {
      hideModal() {
       this.hideError(null);
     },
+    formatDate(date) {
+      return moment(date).format('h:mm:ss');
+    },
     sendMessage() {
-        consile.log(this.message);
+      console.log('TO', );
+      this.$socket.emit('personalMsg', { to: this.selectedRep.currentStud[this.chatTab].email, from: this.userInfo.email, text: this.message});
+      this.allMessages.push({ name: this.userInfo.email, message: this.message, date: Date.now()})
+      this.message = '';
     },
     addMaterial() {
       this.isOpenAddMaterial = true;
@@ -229,6 +247,14 @@ export default {
   },
   async mounted() {
     this.selectedRep = await this.getRepInfo(this.userInfo.id);
+    this.selectedRep.currentStud.map(async stud => {
+      this.allMessages[stud.email] = [];
+      this.sockets.subscribe('personalMsg', (message) => {
+        if (message.to === this.userInfo.email) {
+          this.allMessages[message.from].push({ name: message.from, message: message.text, date: Date.now()});
+        }
+      });
+    });
   }
 }
 </script>
