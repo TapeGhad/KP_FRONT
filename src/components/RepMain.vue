@@ -69,6 +69,14 @@
             <VCardText v-if="selectedRep.materials.length === 0"> No materials yet</VCardText>
         </VExpansionPanels>
     </VCard>
+    <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
+        <VCardTitle>Users</VCardTitle>
+        <VCard v-for="(material, index) in selectedRep.materials" :key="index">
+          <VCardText style="text-align: left; font-size: 18px">{{ material.title }}</VCardText>
+          <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="rejectUser()">mdi-close</VIcon>
+          <VIcon style="position: absolute; top:10px; right:70px; color: rgb(16, 165, 16)" @click.stop="acceptUser()">mdi-check</VIcon>
+        </VCard>
+    </VCard>
      <div class="chat" style="margin: 0">
       <div class="chat-messages">
         <div v-for="message in allMessages" :key="`${message.date}${message.message}`" class="chat-mes">
@@ -152,6 +160,12 @@ export default {
     goToAddParts() {
       this.isOpenAddMaterial = false;
       this.isOpenAddParts = true;
+    },
+    rejectUser() {
+      console.log('rejectUser');
+    },
+    acceptUser() {
+      console.log('acceptUser');
     },
     backToMaterial() {
       this.isOpenAddMaterial = true;
