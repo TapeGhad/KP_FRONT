@@ -150,8 +150,32 @@ const actions = {
     return data;
   },
 
+  async acceptUser(_, userId) {
+    const {data} = await Axios.post(`/users/acceptUser`, { id: userId });
+    return data;
+  },
+
+  async rejectUser(_, userId) {
+    const {data} = await Axios.post(`/users/rejectUser`, { id: userId });
+    return data;
+  },
+
+  async removeUser(_, userId) {
+    const {data} = await Axios.post(`/users/removeUser`, { id: userId });
+    return data;
+  },
+
   async addToFaivourites({ commit }, id) {
     await Axios.post("/users/addFav", { id })
+      .then(response => {
+        commit('SET_USER_INFO', {token: response.data.token, ...response.data.user});
+        localStorage.setItem("user", JSON.stringify({token: response.data.token, ...response.data.user}));
+        Axios.defaults.headers.common['Authorization'] = `Token ${response.data.token}`;
+      })
+  },
+
+  async updateUserInfo({ commit }) {
+    await Axios.get("/users/updateUserInfo")
       .then(response => {
         commit('SET_USER_INFO', {token: response.data.token, ...response.data.user});
         localStorage.setItem("user", JSON.stringify({token: response.data.token, ...response.data.user}));

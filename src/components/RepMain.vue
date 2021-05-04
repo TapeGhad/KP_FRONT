@@ -70,12 +70,27 @@
         </VExpansionPanels>
     </VCard>
     <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
-        <VCardTitle>Users</VCardTitle>
-        <VCard v-for="(material, index) in selectedRep.materials" :key="index">
-          <VCardText style="text-align: left; font-size: 18px">{{ material.title }}</VCardText>
-          <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="rejectUser()">mdi-close</VIcon>
-          <VIcon style="position: absolute; top:10px; right:70px; color: rgb(16, 165, 16)" @click.stop="acceptUser()">mdi-check</VIcon>
-        </VCard>
+        <VCardTitle>Users to asign</VCardTitle>
+        <div style="max-height: 150px; overflow: auto">
+          <div v-if="selectedRep.faivouritesStud.length">
+            <VCard v-for="(user, index) in selectedRep.faivouritesStud" :key="index">
+              <VCardText style="text-align: left; font-size: 18px">{{ user.email }}</VCardText>
+              <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="rejectUserCall(user.id)">mdi-close</VIcon>
+              <VIcon style="position: absolute; top:10px; right:70px; color: rgb(16, 165, 16)" @click.stop="acceptUserCall(user.id)">mdi-check</VIcon>
+            </VCard>
+          </div>
+          <VCardText v-else> No users for now</VCardText>
+        </div>
+        <VCardTitle>Your pupils</VCardTitle>
+        <div style="max-height: 250px; overflow: auto">
+          <div v-if="selectedRep.currentStud.length">
+            <VCard v-for="(user, index) in selectedRep.currentStud" :key="index">
+              <VCardText style="text-align: left; font-size: 18px">{{ user.email }}</VCardText>
+              <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="removeUserCall(user.id)">mdi-delete</VIcon>
+            </VCard>
+          </div>
+          <VCardText v-else> No users for now</VCardText>
+        </div>
     </VCard>
      <div class="chat" style="margin: 0">
       <div class="chat-messages">
@@ -103,7 +118,7 @@
 import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
-import { mapActions } from 'vuex'
+import { mapActions, mapState } from 'vuex'
 
 export default {
   name: 'Login',
@@ -111,8 +126,8 @@ export default {
       return {
           email: "",
           password: "",
-          loader: false,
           allMessages: [],
+          loader: false,
           message: '',
           selectedRep: null,
           tab: null,
@@ -140,6 +155,10 @@ export default {
         getRepInfo: 'getRepInfo',
         saveNewMaterialRep: 'saveNewMaterialRep',
         deleteMaterial: 'deleteMaterial',
+        getFaivouritesStud: 'getFaivouritesStud',
+        acceptUser: 'acceptUser',
+        rejectUser: 'rejectUser',
+        removeUser: 'removeUser'
     }),
     toUsersMain() {
       this.$router.push("/user-main");
@@ -154,18 +173,32 @@ export default {
       this.isOpenAddMaterial = true;
     },
     async deleteMaterialCall(title) {
+      this.loader = true;
       await this.deleteMaterial(title);
       this.selectedRep = await this.getRepInfo(this.userInfo.id);
+      this.loader = false;
     },
     goToAddParts() {
       this.isOpenAddMaterial = false;
       this.isOpenAddParts = true;
     },
-    rejectUser() {
-      console.log('rejectUser');
+    async rejectUserCall(userId) {
+      this.loader = true;
+      await this.rejectUser(userId);
+      this.selectedRep = await this.getRepInfo(this.userInfo.id);
+      this.loader = false;
     },
-    acceptUser() {
-      console.log('acceptUser');
+    async removeUserCall(userId) {
+      this.loader = true;
+      await this.removeUser(userId);
+      this.selectedRep = await this.getRepInfo(this.userInfo.id);
+      this.loader = false;
+    },
+    async acceptUserCall(userId) {
+      this.loader = true;
+      await this.acceptUser(userId);
+      this.selectedRep = await this.getRepInfo(this.userInfo.id);
+      this.loader = false;
     },
     backToMaterial() {
       this.isOpenAddMaterial = true;
@@ -173,12 +206,14 @@ export default {
       this.newParts = [];
     },
     async saveNewMaterial() {
+      this.loader = true;
       await this.saveNewMaterialRep({
         title: this.titleNewMaterial,
         parts: this.newParts
       });
       this.isOpenAddParts = false;
       this.selectedRep = await this.getRepInfo(this.userInfo.id);
+      this.loader = false;
     }
   },
   computed: {

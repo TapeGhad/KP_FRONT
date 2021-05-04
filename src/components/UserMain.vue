@@ -143,9 +143,9 @@
             </VCard>
           </VTabItem>
         </VTabsItems>
-        <VBtn v-show="tab === 0" color="rgb(16, 165, 16)" @click="goToRep" style="position: absolute; left: 10px; bottom: 5;">MORE</VBtn>
-        <VBtn v-show="tab === 0 && !inFavourites" fixed color="#FFC846" @click="addToFaivouritesCall">ADD TO FAVOIRITE</VBtn>
-        <VBtn v-show="tab === 0 && inFavourites" outlined fixed color="rgb(16, 165, 16)" @click="removeFromFaivouritesCall">
+        <VBtn v-show="tab === 0 && inTeacher" color="rgb(16, 165, 16)" @click="goToRep" style="position: absolute; left: 10px; bottom: 5;">MORE</VBtn>
+        <VBtn v-show="tab === 0 && !inFavourites && !inTeacher" fixed color="#FFC846" @click="addToFaivouritesCall">ADD TO FAVOIRITE</VBtn>
+        <VBtn v-show="tab === 0 && inFavourites && !inTeacher" outlined fixed color="rgb(16, 165, 16)" @click="removeFromFaivouritesCall">
         <VIcon left>
           mdi-check
           </VIcon>
@@ -232,6 +232,7 @@ export default {
       addToFaivourites: 'addToFaivourites',
       hideError: 'hideError',
       removeFromFaivourites: 'removeFromFaivourites',
+      updateUserInfo: 'updateUserInfo',
     }),
     handleRowClickRep(item) {
       this.selectedRep = item;
@@ -271,6 +272,8 @@ export default {
     });
     this.$socket.emit('getChat');
     this.$socket.emit('usersOnlineCheck');
+    this.updateUserInfo();
+
   },
   computed: {
     ...mapGetters([
@@ -279,6 +282,9 @@ export default {
     ]),
     inFavourites: function () {
       return this.userInfo.faivourites.includes(this.selectedRep.id);
+    },
+    inTeacher: function () {
+      return this.userInfo.teachers.includes(this.selectedRep.id);
     }
   },
   watch: {
