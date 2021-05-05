@@ -93,15 +93,14 @@
         </div>
     </VCard>
      <div class="chat" style="margin: 0">
-      <div class="chat-messages">
-        {{ chatTab }}
+      <div class="chat-messages" v-if="isChat">
         <VTabs v-model="chatTab">
-          <VTab v-for="(user, index) in selectedRep.currentStud" :key="index">{{ user.email }}</VTab>
+          <VTab v-for="(user, index) in selectedRep.currentStud" :key="index" :style="{ 'background-color': tabColors[index]}" @click="tabColors[index] = '#ffffff'">{{ user.email }}</VTab>
         </VTabs>
         <VTabsItems v-model="chatTab">
           <VTabItem v-for="(user, index) in selectedRep.currentStud" :key="index">
             <VCard style="height: 250px; overflow: auto">
-              <div v-for="message in allMessages[user.email]" :key="`${message.date}${message.message}`" class="chat-mes">
+              <div v-for="(message, index) in allMessages[user.email]" :key="index" class="chat-mes">
                 <p style="margin: auto 10px auto 0; border: 1px solid black; border-width: 0 1px 0 0; height: 100%">{{ formatDate(message.date) }}</p>
                 <div style="display: flex; flex-direction: column; align-items: flex-start">
                   <p>{{ message.name}}</p>
@@ -149,6 +148,8 @@ export default {
           amountNewMaterial: '',
           newParts: [],
           chatTab: null,
+          isChat: true,
+          tabColors: [],
       }
   },
   props: {
@@ -184,7 +185,9 @@ export default {
     sendMessage() {
       console.log('TO', );
       this.$socket.emit('personalMsg', { to: this.selectedRep.currentStud[this.chatTab].email, from: this.userInfo.email, text: this.message});
-      this.allMessages.push({ name: this.userInfo.email, message: this.message, date: Date.now()})
+      this.isChat = false;
+      this.allMessages[this.selectedRep.currentStud[this.chatTab].email].push({ name: this.userInfo.email, message: this.message, date: Date.now()});
+      this.isChat = true;
       this.message = '';
     },
     addMaterial() {
@@ -249,12 +252,17 @@ export default {
     this.selectedRep = await this.getRepInfo(this.userInfo.id);
     this.selectedRep.currentStud.map(async stud => {
       this.allMessages[stud.email] = [];
-      this.sockets.subscribe('personalMsg', (message) => {
+      this.tabColors.push('#ffffff');
+    });
+    this.sockets.subscribe('personalMsg', async (message) => {
+        console.log("personalMsg");
         if (message.to === this.userInfo.email) {
-          this.allMessages[message.from].push({ name: message.from, message: message.text, date: Date.now()});
+          this.isChat = false;
+          this.tabColors[this.selectedRep.currentStud.findIndex(elem => elem.email === message.from)] = 'yellow';
+          await this.allMessages[message.from].push({ name: message.from, message: message.text, date: Date.now()});
+          this.isChat = true;
         }
       });
-    });
   }
 }
 </script>

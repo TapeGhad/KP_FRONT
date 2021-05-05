@@ -20,7 +20,7 @@
     </VCard>
      <div class="chat" style="margin: 0">
       <div class="chat-messages">
-        <div v-for="message in allMessages" :key="`${message.date}${message.message}`" class="chat-mes">
+        <div v-for="(message, index) in allMessages" :key="index" class="chat-mes">
           <p style="margin: auto 10px auto 0; border: 1px solid black; border-width: 0 1px 0 0; height: 100%">{{ formatDate(message.date) }}</p>
           <div style="display: flex; flex-direction: column; align-items: flex-start">
             <p>{{ message.name}}</p>
@@ -183,6 +183,7 @@ export default {
   async mounted() {
     this.selectedRep = await this.getRepInfo(this.idRep);
     this.sockets.subscribe('personalMsg', (message) => {
+      console.log('personalMsg');
       if (message.to === this.userInfo.email) {
         this.allMessages.push({ name: message.from, message: message.text, date: Date.now()});
       }
