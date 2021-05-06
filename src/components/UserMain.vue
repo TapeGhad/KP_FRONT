@@ -284,7 +284,6 @@ export default {
       return this.userInfo.faivourites.includes(this.selectedRep.id);
     },
     inTeacher: function () {
-      console.log(this.userInfo.teachers, this.selectedRep.id)
       return this.userInfo.teachers.includes(this.selectedRep.id);
     }
   },

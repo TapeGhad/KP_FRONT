@@ -114,7 +114,7 @@
       <input type="text" v-model="message" style="color: black; border: 1px solid black; height: 40px"/>
       <VBtn
         elevation="2"
-        :disabled="message.length === 0"
+        :disabled="message.length === 0 || !selectedRep.personalMsg"
         :color="message.length !== 0 ? 'rgb(78 230 78)' : ''"
         @click="sendMessage"
       >Send</VBtn>
@@ -183,7 +183,6 @@ export default {
       return moment(date).format('h:mm:ss');
     },
     sendMessage() {
-      console.log('TO', );
       this.$socket.emit('personalMsg', { to: this.selectedRep.currentStud[this.chatTab].email, from: this.userInfo.email, text: this.message});
       this.isChat = false;
       this.allMessages[this.selectedRep.currentStud[this.chatTab].email].push({ name: this.userInfo.email, message: this.message, date: Date.now()});
@@ -255,7 +254,6 @@ export default {
       this.tabColors.push('#ffffff');
     });
     this.sockets.subscribe('personalMsg', async (message) => {
-        console.log("personalMsg");
         if (message.to === this.userInfo.email) {
           this.isChat = false;
           this.tabColors[this.selectedRep.currentStud.findIndex(elem => elem.email === message.from)] = 'yellow';

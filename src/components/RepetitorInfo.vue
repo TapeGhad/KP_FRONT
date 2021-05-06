@@ -3,19 +3,23 @@
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
-  <div class="rep-info-main">
-    <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
+  <div class="rep-info-main" v-if="selectedRep">
+     <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
         <VCardTitle>Materials</VCardTitle>
         <VExpansionPanels accordion multiple style="border: 1px solid grey; border-width: 1px 0 0 0">
-            <VExpansionPanel>
+            <VExpansionPanel v-for="(material, index) in selectedRep.materials" :key="index">
                 <VExpansionPanelHeader>
-                Topic 1
+                {{ material.title }}
                 </VExpansionPanelHeader>
                 <VExpansionPanelContent style="background-color: grey">
-                    <VCard style="margin: 5px 0">Part 1: Introduction</VCard>
-                    <VCard>Part 2: Starting</VCard>
+                    <VCard 
+                      v-for="(part, pIndex) in material.parts"
+                      :key="pIndex"
+                      style="margin: 3px 0"
+                    >{{ part }}</VCard>
                 </VExpansionPanelContent>
             </VExpansionPanel>
+            <VCardText v-if="selectedRep.materials.length === 0"> No materials yet</VCardText>
         </VExpansionPanels>
     </VCard>
      <div class="chat" style="margin: 0">
@@ -31,7 +35,7 @@
       <input type="text" v-model="message" style="color: black; border: 1px solid black; height: 40px"/>
       <VBtn
         elevation="2"
-        :disabled="message.length === 0"
+        :disabled="message.length === 0 || !selectedRep.personalMsg"
         :color="message.length !== 0 ? 'rgb(78 230 78)' : ''"
         @click="sendMessage"
       >Send</VBtn>
@@ -53,7 +57,7 @@
           <VTab>Details</VTab>
           <VTab>About</VTab>
         </VTabs>
-        <VTabsItems v-model="tab" style="max-height: 250px; overflow: auto">
+        <VTabsItems v-model="tab" style="max-height: 350px; overflow: auto">
           <VTabItem>
             <VCard
               flat
@@ -81,7 +85,8 @@
             </VCardSubtitle>
             <VCardSubtitle class="card_details">Private chat: 
                <VCheckbox
-                :disabled="!selectedRep.personaMsg"
+                :value="selectedRep.personalMsg"
+                disabled
                 color="rgb(10, 195, 10)"
                 hide-details
                 style="margin: 0 0 0 10px; padding: 0"
@@ -112,7 +117,7 @@
         style="margin-left: 10px"
     ></VRating>
     <VCardActions v-if="rating">
-        <VBtn style="margin: 0 auto" outlined color="rgb(16, 165, 16)">Save</VBtn>
+        <VBtn style="margin: 0 auto" outlined color="rgb(16, 165, 16)" @click="saveRating">Save</VBtn>
     </VCardActions>
   </VCard>
 </div>
@@ -152,7 +157,8 @@ export default {
   methods: {
     ...mapActions({
         hideError: 'hideError',
-        getRepInfo: 'getRepInfo'
+        getRepInfo: 'getRepInfo',
+        updateRepRating: 'updateRepRating'
     }),
     toUsersMain() {
       this.$router.push("/user-main");
@@ -168,6 +174,12 @@ export default {
     formatDate(date) {
       return moment(date).format('h:mm:ss');
     },
+    async saveRating() {
+      this.loader = true;
+      await this.updateRepRating({ rating: this.rating, rep: this.selectedRep._id });
+      this.selectedRep = await this.getRepInfo(this.idRep);
+      this.loader = false;
+    }
   },
   computed: {
     ...mapGetters([
@@ -183,7 +195,6 @@ export default {
   async mounted() {
     this.selectedRep = await this.getRepInfo(this.idRep);
     this.sockets.subscribe('personalMsg', (message) => {
-      console.log('personalMsg');
       if (message.to === this.userInfo.email) {
         this.allMessages.push({ name: message.from, message: message.text, date: Date.now()});
       }

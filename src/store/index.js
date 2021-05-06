@@ -140,6 +140,11 @@ const actions = {
     return data;
   },
 
+  async updateRepRating(_, info) {
+    const {data} = await Axios.post(`/users/updateRepRating`, { info });
+    return data;
+  },
+
   async deleteMaterial(_, title) {
     const {data} = await Axios.post(`/users/deleteMaterial`, { title });
     return data;
