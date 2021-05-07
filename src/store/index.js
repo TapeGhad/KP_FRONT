@@ -160,8 +160,18 @@ const actions = {
     return data;
   },
 
+  async rejectTeacher(_, userId) {
+    const {data} = await Axios.post(`/users/rejectTeacher`, { id: userId });
+    return data;
+  },
+
   async removeUser(_, userId) {
     const {data} = await Axios.post(`/users/removeUser`, { id: userId });
+    return data;
+  },
+
+  async removeTeacher(_, userId) {
+    const {data} = await Axios.post(`/users/removeTeacher`, { id: userId });
     return data;
   },
 

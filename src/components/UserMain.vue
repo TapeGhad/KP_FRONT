@@ -2,6 +2,7 @@
 <div class="user-page" data-app>
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
+  <VBtn style="position: absolute; top:20px; left:48%;" color="#ffffff" @click="toUserSub">SUBSCRIPTIONS</VBtn>
   <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 20px 20px 0">
     <VBtn style="width: fit-content; padding: 10px 20px; margin-left: 20px;" @click="becomeRep">
       Become a repetitor
@@ -240,6 +241,9 @@ export default {
     hideModal() {
       this.hideError(null);
     },
+    toUserSub() {
+      this.$router.push('/userSub');
+    },
     goToRep() {
       this.$router.push(`/repetitor/${this.selectedRep.id}`);
     },
@@ -281,11 +285,12 @@ export default {
       'error'
     ]),
     inFavourites: function () {
-      return this.userInfo.faivourites.includes(this.selectedRep.id);
+      const found = this.userInfo.faivourites.find(elem => elem.id === this.selectedRep.id);
+      return Boolean(found);
     },
     inTeacher: function () {
-      console.log(this.userInfo.teachers, this.selectedRep.id)
-      return this.userInfo.teachers.includes(this.selectedRep.id);
+      const found = this.userInfo.teachers.find(elem => elem.id === this.selectedRep.id);
+      return Boolean(found);
     }
   },
   watch: {
