@@ -5,14 +5,14 @@
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
   <div style="display: flex; flex-direction: row; justify-content: center;">
     <VCard width="400" style="margin: 0 50px 0 0">
-      <VCardTitle>Subscriptions ({{ userInfo.faivourites.length }})</VCardTitle>
+      <VCardTitle>Подписки ({{ userInfo.faivourites.length }})</VCardTitle>
       <VCard v-for="(user, index) in userInfo.faivourites" :key="index">
         <VCardText style="text-align: left; font-size: 18px">{{ user.email }}</VCardText>
         <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="rejectTeacherCall(user.id)">mdi-close</VIcon>
       </VCard>
     </VCard>
     <VCard width="400">
-        <VCardTitle>Teachers ({{ userInfo.teachers.length }})</VCardTitle>
+        <VCardTitle>Учителя ({{ userInfo.teachers.length }})</VCardTitle>
         <VCard v-for="(user, index) in userInfo.teachers" :key="index">
             <VCardText style="text-align: left; font-size: 18px">{{ user.email }}</VCardText>
             <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="removeTeacherCall(user.id)">mdi-delete</VIcon>

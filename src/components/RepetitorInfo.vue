@@ -5,7 +5,7 @@
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
   <div class="rep-info-main" v-if="selectedRep">
      <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
-        <VCardTitle>Materials</VCardTitle>
+        <VCardTitle>Материалы</VCardTitle>
         <VExpansionPanels accordion multiple style="border: 1px solid grey; border-width: 1px 0 0 0">
             <VExpansionPanel v-for="(material, index) in selectedRep.materials" :key="index">
                 <VExpansionPanelHeader>
@@ -19,7 +19,7 @@
                     >{{ part }}</VCard>
                 </VExpansionPanelContent>
             </VExpansionPanel>
-            <VCardText v-if="selectedRep.materials.length === 0"> No materials yet</VCardText>
+            <VCardText v-if="selectedRep.materials.length === 0"> Пока нет материалов</VCardText>
         </VExpansionPanels>
     </VCard>
      <div class="chat" style="margin: 0">
@@ -38,7 +38,7 @@
         :disabled="message.length === 0 || !selectedRep.personalMsg"
         :color="message.length !== 0 ? 'rgb(78 230 78)' : ''"
         @click="sendMessage"
-      >Send</VBtn>
+      >Отправить</VBtn>
     </div>
     <VCard 
         v-if="selectedRep"
@@ -49,21 +49,21 @@
         style="margin: 0 0 0 50px"
       >
         <div class="info_logo">P</div>
-        <VCardTitle>Repetitor: {{ selectedRep.email }}</VCardTitle>
-        <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Subject: 
+        <VCardTitle>Репетитор: {{ selectedRep.email }}</VCardTitle>
+        <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Предмет: 
           <VChip style="margin: 0 0 0 10px">{{ selectedRep.subject }}</VChip>
         </VCardSubtitle>
         <VTabs style="width: 100%; margin-top: 10px" fixed-tabs color="rgb(16, 165, 16)" v-model="tab">
-          <VTab>Details</VTab>
-          <VTab>About</VTab>
+          <VTab>Детали</VTab>
+          <VTab>Подробнее</VTab>
         </VTabs>
         <VTabsItems v-model="tab" style="max-height: 350px; overflow: auto">
           <VTabItem>
             <VCard
               flat
             >
-            <VCardSubtitle class="card_details">Experience: {{ selectedRep.expa }} months</VCardSubtitle>
-            <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Rating: 
+            <VCardSubtitle class="card_details">Опыт: {{ selectedRep.expa }} месяцев</VCardSubtitle>
+            <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Рейтинг: 
               <VRating
                   :value="parseFloat(selectedRep.rating)"
                   color="rgb(255, 234, 44)"
@@ -77,13 +77,13 @@
                   style="margin-left: 10px"
                 ></VRating>
             </VCardSubtitle>
-            <VCardSubtitle class="card_details">Price: 
+            <VCardSubtitle class="card_details">Цена: 
               <VChip outlined style="margin-left: 25px">{{ selectedRep.price }}$</VChip>
             </VCardSubtitle>
-            <VCardSubtitle class="card_details">Phone: 
+            <VCardSubtitle class="card_details">Норер: 
               <VChip outlined style="margin-left: 25px">+375{{ selectedRep.phone }}</VChip>
             </VCardSubtitle>
-            <VCardSubtitle class="card_details">Private chat: 
+            <VCardSubtitle class="card_details">Приватный чат: 
                <VCheckbox
                 :value="selectedRep.personalMsg"
                 disabled
@@ -117,7 +117,7 @@
         style="margin-left: 10px"
     ></VRating>
     <VCardActions v-if="rating">
-        <VBtn style="margin: 0 auto" outlined color="rgb(16, 165, 16)" @click="saveRating">Save</VBtn>
+        <VBtn style="margin: 0 auto" outlined color="rgb(16, 165, 16)" @click="saveRating">Сохранить</VBtn>
     </VCardActions>
   </VCard>
 </div>

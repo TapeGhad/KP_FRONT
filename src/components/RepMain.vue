@@ -3,14 +3,14 @@
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
-  <VBtn style="position: absolute; top:20px; right:20px;" color="#ffffff" @click="toGraphRep">GRAPH</VBtn>
+  <VBtn style="position: absolute; top:20px; right:20px;" color="#ffffff" @click="toGraphRep">График</VBtn>
   <VDialog 
     v-model="isOpenAddMaterial" 
     persistent
     width="400"
   >
     <VCard style="padding: 20px">
-      <VCardTitle>Add new material</VCardTitle>
+      <VCardTitle>Новый материал</VCardTitle>
       <VCardActions>
         <VTextField v-model="titleNewMaterial" label="Title of material"/>
       </VCardActions>
@@ -22,12 +22,12 @@
           counter="1"
         />
       </VCardActions>
-      <VBtn text @click="isOpenAddMaterial = false">Close</VBtn>
+      <VBtn text @click="isOpenAddMaterial = false">Закрыть</VBtn>
       <VBtn
         :disabled="!titleNewMaterial || !amountNewMaterial || amountNewMaterial.length >= 2"
         color="rgb(16, 165, 16)"
         style="color: #ffffff"
-        @click="goToAddParts">Next</VBtn>
+        @click="goToAddParts">Далее</VBtn>
     </VCard>
   </VDialog>
   <VDialog 
@@ -36,23 +36,23 @@
     width="400"
   >
     <VCard v-if="amountNewMaterial" style="padding: 20px">
-      <VCardTitle>Add parts for {{ titleNewMaterial }}</VCardTitle>
+      <VCardTitle>Добавть части к {{ titleNewMaterial }}</VCardTitle>
       <VCardActions v-for="(n, index) in parseInt(amountNewMaterial)" :key="index">
         <VTextField v-model="newParts[index]" label="Name of part"/>
       </VCardActions>
-      <VBtn text @click="backToMaterial">Back</VBtn>
+      <VBtn text @click="backToMaterial">Назад</VBtn>
       <VBtn 
         :disabled="parseInt(amountNewMaterial) !== newParts.length"
         color="rgb(16, 165, 16)"
         style="color: #ffffff"
         @click="saveNewMaterial"
-      >Save</VBtn>
+      >Сохранить</VBtn>
     </VCard>
   </VDialog>
   <div v-if="selectedRep" class="rep-info-main">
     <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
       <VIcon style="position: absolute; top:10px; right:10px; cursor: pointer" large color="#525252" @click="addMaterial">mdi-plus</VIcon>
-        <VCardTitle>Materials</VCardTitle>
+        <VCardTitle>Материалы</VCardTitle>
         <VExpansionPanels accordion multiple style="border: 1px solid grey; border-width: 1px 0 0 0">
             <VExpansionPanel v-for="(material, index) in selectedRep.materials" :key="index">
                 <VExpansionPanelHeader>
@@ -67,11 +67,11 @@
                     >{{ part }}</VCard>
                 </VExpansionPanelContent>
             </VExpansionPanel>
-            <VCardText v-if="selectedRep.materials.length === 0"> No materials yet</VCardText>
+            <VCardText v-if="selectedRep.materials.length === 0">Нету материалов</VCardText>
         </VExpansionPanels>
     </VCard>
     <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
-        <VCardTitle>Users to asign ({{ selectedRep.faivouritesStud.length }})</VCardTitle>
+        <VCardTitle>Запросы ({{ selectedRep.faivouritesStud.length }})</VCardTitle>
         <div style="max-height: 150px; overflow: auto">
           <div v-if="selectedRep.faivouritesStud.length">
             <VCard v-for="(user, index) in selectedRep.faivouritesStud" :key="index">
@@ -80,9 +80,9 @@
               <VIcon style="position: absolute; top:10px; right:70px; color: rgb(16, 165, 16)" @click.stop="acceptUserCall(user.id)">mdi-check</VIcon>
             </VCard>
           </div>
-          <VCardText v-else> No users for now</VCardText>
+          <VCardText v-else>Нету пользователей</VCardText>
         </div>
-        <VCardTitle>Your pupils ({{selectedRep.currentStud.length}})</VCardTitle>
+        <VCardTitle>Ученики ({{selectedRep.currentStud.length}})</VCardTitle>
         <div style="max-height: 250px; overflow: auto">
           <div v-if="selectedRep.currentStud.length">
             <VCard v-for="(user, index) in selectedRep.currentStud" :key="index">
@@ -90,7 +90,7 @@
               <VIcon style="position: absolute; top:10px; right:20px; color: red" @click.stop="removeUserCall(user.id)">mdi-delete</VIcon>
             </VCard>
           </div>
-          <VCardText v-else> No users for now</VCardText>
+          <VCardText v-else>Нету пользователей</VCardText>
         </div>
     </VCard>
      <div class="chat" style="margin: 0">
@@ -118,7 +118,7 @@
         :disabled="message.length === 0 || !selectedRep.personalMsg"
         :color="message.length !== 0 ? 'rgb(78 230 78)' : ''"
         @click="sendMessage"
-      >Send</VBtn>
+      >Отправить</VBtn>
     </div>
   </div>
 </div>

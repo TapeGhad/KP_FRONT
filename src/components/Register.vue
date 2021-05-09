@@ -4,21 +4,21 @@
   <Loader :loader="loader"/>
   <div class="register">
     <div class="planka"></div>
-    <h1>Sign up</h1>
+    <h1>Регистрация</h1>
     <div class="info-block">
       <div class="input-block">
         <div class="mail-icon"></div>
-        <input type="text" v-model="email" placeholder="E-mail">
+        <input type="text" v-model="email" placeholder="Почта">
       </div>
       <div class="input-block">
         <div class="pass-icon"></div>
-        <input type="password" v-model="password1" placeholder="Password">
+        <input type="password" v-model="password1" placeholder="Пароль">
       </div>
       <div class="input-block">
         <div class="pass-icon"></div>
-        <input type="password" v-model="password2" placeholder="Confirm password">
+        <input type="password" v-model="password2" placeholder="Повторите пароль">
       </div>
-      <button id="register" @click="registerButton()">Sign up</button>
+      <button id="register" @click="registerButton()">Регистрация</button>
     </div>
   </div>
 </div>

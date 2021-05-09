@@ -4,22 +4,22 @@
   <Loader :loader="loader"/>
   <div class="login">
     <div class="planka"></div>
-    <h1>LOG IN</h1>
+    <h1>АВТОРИЗАЦИЯ</h1>
     <div class="info-block">
       <div class="input-block">
         <div class="mail-icon"></div>
-        <input type="text" v-model="email" placeholder="E-mail">
+        <input type="text" v-model="email" placeholder="Почта">
       </div>
       <div class="input-block">
         <div class="pass-icon"></div>
-        <input type="password" v-model="password" placeholder="Password">
+        <input type="password" v-model="password" placeholder="Пароль">
       </div>
-      <button id="login" @click="loginButton()">Log in</button>
+      <button id="login" @click="loginButton()">ВОЙТИ</button>
     </div>
     <div class="to-register-block">
-      <p>Don’t have an account? </p>
+      <p>Нету аккаунта? </p>
       <span>
-        <router-link to="/register" class="register-link">Sign up</router-link>
+        <router-link to="/register" class="register-link">Регистрация</router-link>
       </span>
     </div>
   </div>

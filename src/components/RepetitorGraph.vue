@@ -3,7 +3,7 @@
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toRepMain">mdi-arrow-left</VIcon>
-  <p style="color: white; font-size: 20px; margin: 20px">YOUR RATING STAT</p>
+  <p style="color: white; font-size: 20px; margin: 20px">График вашего рейтинга</p>
   <canvas id="chart"></canvas>
 </div>
 </template>

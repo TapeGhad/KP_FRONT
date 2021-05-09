@@ -4,7 +4,7 @@
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
   <VCard class="card" elevation="20" hover>
-      <p style="font-size: 20px; margin: 30px 0; font-weight: bold">To become a repetitor fill this fields:</p>
+      <p style="font-size: 20px; margin: 30px 0; font-weight: bold">Заполните следующие поля:</p>
       <VSelect 
         v-model="selectedSubject"
         :items="subjects"
@@ -76,7 +76,7 @@
         color="rgb(10, 195, 10)"
         style="margin: 0 0 0 350px"
         @click="sendSave"
-    >Save</VBtn>
+    >Перейти</VBtn>
   </VCard>
 </div>
 </template>

@@ -2,10 +2,10 @@
 <div class="user-page" data-app>
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
-  <VBtn style="position: absolute; top:20px; left:48%;" color="#ffffff" @click="toUserSub">SUBSCRIPTIONS</VBtn>
+  <VBtn style="position: absolute; top:20px; left:48%;" color="#ffffff" @click="toUserSub">Подписки</VBtn>
   <div style="display: flex; flex-direction: row; justify-content: space-between; margin: 0 20px 20px 0">
     <VBtn style="width: fit-content; padding: 10px 20px; margin-left: 20px;" @click="becomeRep">
-      Become a repetitor
+      Стать репетитором
     </VBtn>
     <VChip
       style="font-weight: bold; font-size: 20px; padding: 10px 15px"
@@ -36,7 +36,7 @@
         :disabled="message.length === 0"
         :color="message.length !== 0 ? 'rgb(78 230 78)' : ''"
         @click="sendMessage"
-      >Send</VBtn>
+      >Отправить</VBtn>
     </div>
   </div>
   <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: fit-content; margin-top: 50px">
@@ -95,21 +95,21 @@
         style="margin: 0 auto 0 20px"
       >
         <div class="info_logo">P</div>
-        <VCardTitle>Repetitor: {{ selectedRep.email }}</VCardTitle>
-        <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Subject: 
+        <VCardTitle>Репетитор: {{ selectedRep.email }}</VCardTitle>
+        <VCardSubtitle style="display: flex; flex-direction: row; align-items: center; font-weight: bold">Предмет: 
           <VChip style="margin: 0 0 0 10px">{{ selectedRep.subject }}</VChip>
         </VCardSubtitle>
         <VTabs style="width: 100%; margin-top: 10px" fixed-tabs color="rgb(16, 165, 16)" v-model="tab">
-          <VTab>Details</VTab>
-          <VTab>About</VTab>
+          <VTab>Детали</VTab>
+          <VTab>Подробнее</VTab>
         </VTabs>
         <VTabsItems v-model="tab" style="max-height: 200px; overflow: auto">
           <VTabItem>
             <VCard
               flat
             >
-            <VCardSubtitle class="card_details">Experience: {{ selectedRep.expa }} months</VCardSubtitle>
-            <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Rating: 
+            <VCardSubtitle class="card_details">Опыт: {{ selectedRep.expa }} месяцев</VCardSubtitle>
+            <VCardSubtitle class="card_details" style="padding: 0 0 0 15px">Рейтинг: 
               <VRating
                   :value="parseFloat(selectedRep.rating)"
                   color="rgb(255, 234, 44)"
@@ -123,10 +123,10 @@
                   style="margin-left: 10px"
                 ></VRating>
             </VCardSubtitle>
-            <VCardSubtitle class="card_details">Price: 
+            <VCardSubtitle class="card_details">Цена: 
               <VChip outlined style="margin-left: 25px">{{ selectedRep.price }}$</VChip>
             </VCardSubtitle>
-            <VCardSubtitle class="card_details">Private chat: 
+            <VCardSubtitle class="card_details">Приватный чат: 
                <VCheckbox
                 :disabled="!selectedRep.personaMsg"
                 color="rgb(10, 195, 10)"
@@ -144,13 +144,13 @@
             </VCard>
           </VTabItem>
         </VTabsItems>
-        <VBtn v-show="tab === 0 && inTeacher" color="rgb(16, 165, 16)" @click="goToRep" style="position: absolute; left: 10px; bottom: 5;">MORE</VBtn>
-        <VBtn v-show="tab === 0 && !inFavourites && !inTeacher" fixed color="#FFC846" @click="addToFaivouritesCall">ADD TO FAVOIRITE</VBtn>
+        <VBtn v-show="tab === 0 && inTeacher" color="rgb(16, 165, 16)" @click="goToRep" style="position: absolute; left: 10px; bottom: 5;">Подробнее</VBtn>
+        <VBtn v-show="tab === 0 && !inFavourites && !inTeacher" fixed color="#FFC846" @click="addToFaivouritesCall">В любимые</VBtn>
         <VBtn v-show="tab === 0 && inFavourites && !inTeacher" outlined fixed color="rgb(16, 165, 16)" @click="removeFromFaivouritesCall">
         <VIcon left>
           mdi-check
           </VIcon>
-          IN FAVOURITES
+          В любимых
         </VBtn>
       </VCard>
   </div>
