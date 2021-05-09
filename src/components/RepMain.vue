@@ -3,6 +3,7 @@
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
+  <VBtn style="position: absolute; top:20px; right:20px;" color="#ffffff" @click="toGraphRep">GRAPH</VBtn>
   <VDialog 
     v-model="isOpenAddMaterial" 
     persistent
@@ -70,7 +71,7 @@
         </VExpansionPanels>
     </VCard>
     <VCard width="400" height="550" elevation="5" style="margin-right: 50px">
-        <VCardTitle>Users to asign</VCardTitle>
+        <VCardTitle>Users to asign ({{ selectedRep.faivouritesStud.length }})</VCardTitle>
         <div style="max-height: 150px; overflow: auto">
           <div v-if="selectedRep.faivouritesStud.length">
             <VCard v-for="(user, index) in selectedRep.faivouritesStud" :key="index">
@@ -81,7 +82,7 @@
           </div>
           <VCardText v-else> No users for now</VCardText>
         </div>
-        <VCardTitle>Your pupils</VCardTitle>
+        <VCardTitle>Your pupils ({{selectedRep.currentStud.length}})</VCardTitle>
         <div style="max-height: 250px; overflow: auto">
           <div v-if="selectedRep.currentStud.length">
             <VCard v-for="(user, index) in selectedRep.currentStud" :key="index">
@@ -175,6 +176,9 @@ export default {
     }),
     toUsersMain() {
       this.$router.push("/user-main");
+    },
+    toGraphRep() {
+      this.$router.push(`/repGraph/${this.selectedRep._id}`);
     },
      hideModal() {
       this.hideError(null);
