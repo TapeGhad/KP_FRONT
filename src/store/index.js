@@ -140,6 +140,14 @@ const actions = {
     return data;
   },
 
+  async deleteAccount(_, id) {
+    const {data} = await Axios.post(`/users/deleteAccount`, { id });
+    commit('SET_USER_INFO', {});
+    localStorage.setItem("user", JSON.stringify({}));
+    Axios.defaults.headers.common['Authorization'] = `Token `;
+    return data;
+  },
+
   async updateRepRating(_, info) {
     const {data} = await Axios.post(`/users/updateRepRating`, { info });
     return data;
@@ -152,6 +160,11 @@ const actions = {
 
   async getRepInfo(_, idRep) {
     const {data} = await Axios.post(`/users/repInfo`, { id: idRep });
+    return data;
+  },
+
+  async getUserInfoPop(_) {
+    const {data} = await Axios.get(`/users/getUserInfoPop`);
     return data;
   },
 

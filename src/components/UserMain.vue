@@ -266,6 +266,7 @@ export default {
   },
   mounted() {
     this.sockets.subscribe(`chatUpdate`, (message) => {
+      console.log('chatUpdate');
       this.allMessages.push(message);
     });
     this.sockets.subscribe(`allChat`, (messages) => {
@@ -285,12 +286,10 @@ export default {
       'error'
     ]),
     inFavourites: function () {
-      const found = this.userInfo.faivourites.find(elem => elem.id === this.selectedRep.id);
-      return Boolean(found);
+      return this.userInfo.faivourites.includes(this.selectedRep.id);
     },
     inTeacher: function () {
-      const found = this.userInfo.teachers.find(elem => elem.id === this.selectedRep.id);
-      return Boolean(found);
+      return this.userInfo.teachers.includes(this.selectedRep.id);
     }
   },
   watch: {

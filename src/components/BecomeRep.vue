@@ -127,7 +127,7 @@ export default {
             personalMsg: this.personalMsg,
             about: this.about,
             price: parseFloat(this.price),
-            phone: phone,
+            phone: this.phone,
         });
         await this.logOutFromCurrency();
         this.$router.push("/login");

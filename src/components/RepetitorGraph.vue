@@ -10,7 +10,7 @@
 
 <script>
 import Chart from 'chart.js';
-import chartData from './chart-data.js'
+import ChartData from './chart-data.js'
 import PopUp from './PopUp.vue'
 import Loader from './Loader.vue'
 import { mapGetters } from 'vuex'
@@ -37,7 +37,7 @@ export default {
           chatTab: null,
           isChat: true,
           tabColors: [],
-          chartData: chartData
+          chartData: { ...ChartData }
       }
   },
   props: {
@@ -87,6 +87,10 @@ export default {
     });
     const ctx = document.getElementById('chart');
     new Chart(ctx, this.chartData);
+  },
+  beforeDestroy() {
+     this.chartData.data.labels = [];
+     this.chartData.data.datasets[0].data = [];
   }
 }
 </script>

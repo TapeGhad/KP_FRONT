@@ -4,6 +4,7 @@
   <Loader :loader="loader"/>
   <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
   <VBtn style="position: absolute; top:20px; right:20px;" color="#ffffff" @click="toGraphRep">График</VBtn>
+  <VBtn style="position: absolute; bottom:20px; right:20px;color: white" color="rgba(255, 0, 0, 1)" @click="deleteAccountCall">Delete account</VBtn>
   <VDialog 
     v-model="isOpenAddMaterial" 
     persistent
@@ -172,7 +173,8 @@ export default {
         getFaivouritesStud: 'getFaivouritesStud',
         acceptUser: 'acceptUser',
         rejectUser: 'rejectUser',
-        removeUser: 'removeUser'
+        removeUser: 'removeUser',
+        deleteAccount: 'deleteAccount',
     }),
     toUsersMain() {
       this.$router.push("/user-main");
@@ -182,6 +184,10 @@ export default {
     },
      hideModal() {
       this.hideError(null);
+    },
+    deleteAccountCall() {
+      this.deleteAccount(this.selectedRep._id);
+      this.$router.push(`/login`);
     },
     formatDate(date) {
       return moment(date).format('h:mm:ss');
