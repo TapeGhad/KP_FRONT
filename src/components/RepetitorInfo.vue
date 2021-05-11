@@ -85,7 +85,7 @@
             </VCardSubtitle>
             <VCardSubtitle class="card_details">Приватный чат: 
                <VCheckbox
-                :value="selectedRep.personalMsg"
+                v-model="selectedRep.personalMsg"
                 disabled
                 color="rgb(10, 195, 10)"
                 hide-details

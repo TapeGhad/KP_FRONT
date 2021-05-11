@@ -220,6 +220,13 @@ const actions = {
       })
   },
 
+
+  async logout({ commit }) {
+      commit('SET_USER_INFO', {});
+      localStorage.setItem("user", JSON.stringify({}));
+      Axios.defaults.headers.common['Authorization'] = `Token `;
+  },
+
   async becomeRep({ commit }, dataCome) {
     const {data} = await Axios.post(`/users/becomeRep`, dataCome);
     console.log('data', data);

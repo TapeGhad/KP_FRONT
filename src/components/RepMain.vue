@@ -2,7 +2,7 @@
 <div class="user-page" data-app>
   <PopUp :error="error" @hideModal="hideModal"/>
   <Loader :loader="loader"/>
-  <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toUsersMain">mdi-arrow-left</VIcon>
+  <VIcon style="position: absolute; top:20px; left:20px;" x-large color="#ffffff" @click="toLogin">mdi-arrow-left</VIcon>
   <VBtn style="position: absolute; top:20px; right:20px;" color="#ffffff" @click="toGraphRep">График</VBtn>
   <VBtn style="position: absolute; bottom:20px; right:20px;color: white" color="rgba(255, 0, 0, 1)" @click="deleteAccountCall">Delete account</VBtn>
   <VDialog 
@@ -175,12 +175,17 @@ export default {
         rejectUser: 'rejectUser',
         removeUser: 'removeUser',
         deleteAccount: 'deleteAccount',
+        logout: 'logout'
     }),
     toUsersMain() {
       this.$router.push("/user-main");
     },
     toGraphRep() {
       this.$router.push(`/repGraph/${this.selectedRep._id}`);
+    },
+    async toLogin() {
+      await this.logout();
+      this.$router.push("/login");
     },
      hideModal() {
       this.hideError(null);

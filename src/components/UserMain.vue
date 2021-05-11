@@ -128,7 +128,8 @@
             </VCardSubtitle>
             <VCardSubtitle class="card_details">Приватный чат: 
                <VCheckbox
-                :disabled="!selectedRep.personaMsg"
+                v-model="selectedRep.personalMsg"
+                disabled
                 color="rgb(10, 195, 10)"
                 hide-details
                 style="margin: 0 0 0 10px; padding: 0"
